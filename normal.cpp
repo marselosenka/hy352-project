@@ -22,8 +22,10 @@ int main(void) {
 
 
     JSON_derulo firstarray = JSON_derulo{};
-    JSON_derulo secondarray = JSON_derulo{}[JSON_derulo("\"Kalispera\""),JSON_derulo("\"KALH\"")];
+    JSON_derulo secondarray = JSON_derulo{}[JSON_derulo("\"Kalispera\""),JSON_derulo("\"KALH\""),JSON_derulo("\"Kalimera\""),JSON_derulo("\"Gamw\"")];
     cout << (void*) &secondarray << '\n';
     cout<<secondarray.getArr()[0].getString()<<endl;
     cout<<secondarray.getArr()[1].getString()<<endl;
+    cout<<secondarray.getArr()[2].getString()<<endl;
+    cout<<secondarray.getArr()[3].getString()<<endl;
 }

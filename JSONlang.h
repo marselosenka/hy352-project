@@ -68,25 +68,39 @@ public:
     std::string getName();
     void setName(std::string s);
 
-    int getIn();
+    int getIn() {
+        return this->in;
+    }
     void setIn(int num);
 
-    double getD();
+    double getD() {
+        return this->d;
+    }
     void setD(double num);
 
-    std::string getString();
+    std::string getString() {
+        return this->str;
+    }
     void setString(std::string s);
 
-    Type getType();
+    Type getType() {
+        return this->x;
+    }
     void setType(Type x);
 
-    std::string getKey();
+    std::string getKey() {
+        return this->key;
+    }
     void setKey(std::string s);
 
-    std::list<JSON_derulo> getObj();
+    std::list<JSON_derulo> getObj(){
+        return this->obj;
+    }
     void setObj(std::list<JSON_derulo> obj);
 
-    std::vector<JSON_derulo> getArr();
+    std::vector<JSON_derulo> getArr(){
+        return this->array;
+    }
     void setArr(std::vector<JSON_derulo> arr);
 
     // Operator Overloads
