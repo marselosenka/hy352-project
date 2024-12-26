@@ -11,7 +11,7 @@ using namespace std;
 // Define Macros
 
 #define PROGRAM_BEGIN       int main(void) { JSON_derulo js
-#define PROGRAM_END         ;cout<<name.getName()<<endl;}
+#define PROGRAM_END         ;}
 
 
 #define JSON(name)          ;JSON_derulo name 

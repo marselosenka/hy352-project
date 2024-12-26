@@ -109,8 +109,9 @@ JSON_derulo JSON_derulo::operator=(JSON_derulo right) {
 
 
 JSON_derulo& JSON_derulo::operator[](JSON_derulo js) {
-    cout <<js.getString()<< endl;
-    this->setArr(temp->getArr());
+    if(temp != NULL) {
+        this->setArr(temp->getArr());
+    }
     this->array.push_back(js);
     if(temp != NULL) {
         temp = NULL;
@@ -119,7 +120,6 @@ JSON_derulo& JSON_derulo::operator[](JSON_derulo js) {
 }
 
 JSON_derulo& JSON_derulo::operator,(JSON_derulo js) {
-    cout <<js.getString()<< endl;
 
     if(temp == NULL) {
         temp = &js;
