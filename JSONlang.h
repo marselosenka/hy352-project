@@ -26,8 +26,10 @@ using namespace std;
 
 #define KEY(str)            JSON_derulo(#str,1) = false ? JSON_derulo("false")
 
-#define TRUE                JSON_derulo(true)
-#define FALSE               JSON_derulo(false)
+#define TRUE                JSON_derulo(true,"true")
+#define FALSE               JSON_derulo(false,"false")
+
+#define ERASE name          erase_data(name);
 
 // Enum to define data types
 enum Type{
@@ -63,6 +65,7 @@ public:
     JSON_derulo(double n);
     JSON_derulo();
     JSON_derulo(std::initializer_list<JSON_derulo> list);
+    JSON_derulo(bool bool_,std::string s);
 
     // Getters and Setters
     std::string getName();
@@ -103,11 +106,27 @@ public:
     }
     void setArr(std::vector<JSON_derulo> arr);
 
+    bool getBool(){
+        return this->bool_;
+    }
+
+    void setBool(bool b);
     // Operator Overloads
     JSON_derulo operator=(JSON_derulo right);
     JSON_derulo& operator[](JSON_derulo js);
     JSON_derulo& operator,(JSON_derulo js);
+    JSON_derulo operator+(JSON_derulo js);
+    JSON_derulo operator-(JSON_derulo js);
+    JSON_derulo operator/(JSON_derulo js);
+    JSON_derulo operator*(JSON_derulo js);
+    JSON_derulo operator%(JSON_derulo js);
+    JSON_derulo operator>(JSON_derulo js);
+    JSON_derulo operator>=(JSON_derulo js);
+    JSON_derulo operator<(JSON_derulo js);
+    JSON_derulo operator<=(JSON_derulo js);
+    JSON_derulo operator&&(JSON_derulo js);
+    JSON_derulo operator||(JSON_derulo js);
 };
 
-
+void erase_data(JSON_derulo rulo);
 #endif
