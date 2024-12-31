@@ -23,5 +23,5 @@ JSON(students) = ARRAY [
         KEY(grades) : ARRAY[ OBJECT { KEY(hy100) : NUMBER(7.5) }, OBJECT { KEY(hy150) : NUMBER(8) } ] 
     }
     ]
-
+PRINT(students)
 PROGRAM_END

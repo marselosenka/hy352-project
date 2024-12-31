@@ -31,6 +31,8 @@ using namespace std;
 
 #define ERASE name          erase_data(name);
 
+#define PRINT(name)          ;printJSON(name,0)
+
 // Enum to define data types
 enum Type{
     no_type=0,
@@ -126,7 +128,10 @@ public:
     JSON_derulo operator<=(JSON_derulo js);
     JSON_derulo operator&&(JSON_derulo js);
     JSON_derulo operator||(JSON_derulo js);
+    JSON_derulo operator==(JSON_derulo js);
 };
 
 void erase_data(JSON_derulo rulo);
+void printJSON(JSON_derulo json, int indent = 0);
+bool areJSONEqual(JSON_derulo obj1,JSON_derulo obj2);
 #endif
