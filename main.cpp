@@ -18,10 +18,11 @@ JSON(students) = ARRAY [
             KEY(grades) : ARRAY[ OBJECT { KEY(hy100) : NUMBER(7.5) }, OBJECT { KEY(hy150) : NUMBER(8) } ] 
         },
         OBJECT{
-        KEY(name) : STRING("Nikos Nikolaou"),
+        KEY(name) : STRING("Petros Nikolaou"),
         KEY(id) : STRING("HEYYY"),
         KEY(grades) : ARRAY[ OBJECT { KEY(hy100) : NUMBER(7.5) }, OBJECT { KEY(hy150) : NUMBER(8) } ] 
     }
     ]
-PRINT(students)
+SET secondarray[0] ASSIGN STRING("KAVLISPERMA :3")
+PRINT students[1]["slay"][0]
 PROGRAM_END

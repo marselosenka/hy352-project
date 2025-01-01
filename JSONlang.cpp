@@ -106,11 +106,18 @@ JSON_derulo JSON_derulo::operator=(JSON_derulo right) {
     } else if(right.getType() == arr) {
         this->setArr(right.getArr());
         this->setType(right.getType());
-
     }
+
+
     return *this;
 }
 
+JSON_derulo& JSON_derulo::operator+=(JSON_derulo right) {
+    if(this->getType() == strg && (right.getType() == strg) ) {
+        this->setString(right.getString());
+    }
+    return *this;
+}
 
 JSON_derulo& JSON_derulo::operator[](JSON_derulo js) {
     if(temp != NULL) {
@@ -422,6 +429,25 @@ JSON_derulo JSON_derulo::operator==(JSON_derulo js) {
     n.setType(boolean);
     return n;
 }
+
+JSON_derulo& JSON_derulo::operator[](int i) {
+    return this->array.at(i);
+}
+
+JSON_derulo& JSON_derulo::operator[](std::string s) {
+    try {
+        for(auto& json : obj) {
+            if(json.getKey() == s) {
+                return json;
+            }
+        }
+        throw s;
+    } catch(...) {
+        cout<<"Key "+s+" does not exist!"<<endl;
+        exit(0);
+        return *this;
+    }
+}
 void erase_data(JSON_derulo right){
     if(right.getType() == strg) {
         right.setString(nullptr);
@@ -564,5 +590,11 @@ bool areJSONEqual(JSON_derulo obj1,JSON_derulo obj2) {
     }
 
     return false; 
+}
+
+
+std::ostream& operator<<(std::ostream& os, JSON_derulo& js) {
+    printJSON(js, 0);
+    return os;
 }
 

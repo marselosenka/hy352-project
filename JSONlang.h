@@ -29,9 +29,12 @@ using namespace std;
 #define TRUE                JSON_derulo(true,"true")
 #define FALSE               JSON_derulo(false,"false")
 
+
+#define SET                 ;
+#define ASSIGN              +=
 #define ERASE name          erase_data(name);
 
-#define PRINT(name)          ;printJSON(name,0)
+#define PRINT         ;cout<<
 
 // Enum to define data types
 enum Type{
@@ -44,6 +47,10 @@ enum Type{
     boolean=6
 };
 
+/**
+ * Class that will be holding the JSON data.
+ * 
+ */
 class JSON_derulo {
 private:
     std::string Name;
@@ -115,7 +122,10 @@ public:
     void setBool(bool b);
     // Operator Overloads
     JSON_derulo operator=(JSON_derulo right);
+    JSON_derulo& operator+=(JSON_derulo right);
     JSON_derulo& operator[](JSON_derulo js);
+    JSON_derulo& operator[](int i);
+    JSON_derulo& operator[](string s);
     JSON_derulo& operator,(JSON_derulo js);
     JSON_derulo operator+(JSON_derulo js);
     JSON_derulo operator-(JSON_derulo js);
@@ -134,4 +144,6 @@ public:
 void erase_data(JSON_derulo rulo);
 void printJSON(JSON_derulo json, int indent = 0);
 bool areJSONEqual(JSON_derulo obj1,JSON_derulo obj2);
+std::ostream& operator<<(std::ostream& os, JSON_derulo& js);
+
 #endif
