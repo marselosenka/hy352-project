@@ -4,37 +4,37 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <unordered_map>
 #include <list>
 using namespace std;
 
 // Define Macros
 
-#define PROGRAM_BEGIN       int main(void) { JSON_derulo js
+#define PROGRAM_BEGIN       ;int main(void) { JSON_derulo dummy;
 #define PROGRAM_END         ;}
 
 
 #define JSON(name)          ;JSON_derulo name 
-#define STRING(str)         JSON_derulo(#str)          
+#define STRING(str)         JSON_derulo(str)          
 
 #define NUMBER(number)      JSON_derulo(number)
 
 #define ARRAY               JSON_derulo{}
 
 #define OBJECT              JSON_derulo 
-               
-
 #define KEY(str)            JSON_derulo(#str,1) = false ? JSON_derulo("false")
-
 #define TRUE                JSON_derulo(true,"true")
 #define FALSE               JSON_derulo(false,"false")
 
+// MANIPULATION OF OBJECTS/ARRAYS
+#define SET                 ;probablyAppend=true;
+#define ASSIGN              =
+#define ERASE               ;toERASE=true; dummy>>
+#define APPEND              += 
 
-#define SET                 ;
-#define ASSIGN              +=
-#define ERASE name          erase_data(name);
-
-#define PRINT         ;cout<<
+#define HAS_KEY(json,str)   hasKey(json,str)  
+#define SIZE_OF(json)       size_of(json)
+#define PRINT               ;cout<<
+#define IS_EMPTY(json)      is_empty_json(json)
 
 // Enum to define data types
 enum Type{
@@ -46,6 +46,8 @@ enum Type{
     arr=5,
     boolean=6
 };
+extern bool toERASE;
+extern bool probablyAppend;
 
 /**
  * Class that will be holding the JSON data.
@@ -53,15 +55,16 @@ enum Type{
  */
 class JSON_derulo {
 private:
-    std::string Name;
     std::string key;
 
-    std::string str;
-    int in;
-    double d;
-    std::vector<JSON_derulo> array;
-    std::list<JSON_derulo> obj;
-    bool bool_;
+    // VALUES
+    std::string strValue;
+    int integerValue;
+    double doubleValue;
+    bool boolValue;
+    
+    std::vector<JSON_derulo> arrayValue;
+    std::list<JSON_derulo> objectValue;
 
     enum Type x;
 
@@ -77,23 +80,21 @@ public:
     JSON_derulo(bool bool_,std::string s);
 
     // Getters and Setters
-    std::string getName();
-    void setName(std::string s);
 
-    int getIn() {
-        return this->in;
+    int getIntegerValue() {
+        return this->integerValue;
     }
-    void setIn(int num);
+    void setIntegerValue(int num);
 
-    double getD() {
-        return this->d;
+    double getDoubleValue() {
+        return this->doubleValue;
     }
-    void setD(double num);
+    void setDoubleValue(double num);
 
-    std::string getString() {
-        return this->str;
+    std::string getStringValue() {
+        return this->strValue;
     }
-    void setString(std::string s);
+    void setStringValue(std::string s);
 
     Type getType() {
         return this->x;
@@ -105,28 +106,32 @@ public:
     }
     void setKey(std::string s);
 
-    std::list<JSON_derulo> getObj(){
-        return this->obj;
+    std::list<JSON_derulo> getObjectValue(){
+        return this->objectValue;
     }
-    void setObj(std::list<JSON_derulo> obj);
+    void setObjectValue(std::list<JSON_derulo> obj);
 
-    std::vector<JSON_derulo> getArr(){
-        return this->array;
+    std::vector<JSON_derulo> getArrayValue(){
+        return this->arrayValue;
     }
-    void setArr(std::vector<JSON_derulo> arr);
+    void setArrayValue(std::vector<JSON_derulo> arr);
 
-    bool getBool(){
-        return this->bool_;
+    bool getBoolValue(){
+        return this->boolValue;
     }
-
-    void setBool(bool b);
+    void setBoolValue(bool b);
+    void clear_arr(int i){
+        arrayValue.erase(arrayValue.begin()+i);
+    }
+    void clear_obj(std::string key,JSON_derulo js);
+    void clear_obj();
     // Operator Overloads
     JSON_derulo operator=(JSON_derulo right);
-    JSON_derulo& operator+=(JSON_derulo right);
     JSON_derulo& operator[](JSON_derulo js);
     JSON_derulo& operator[](int i);
     JSON_derulo& operator[](string s);
     JSON_derulo& operator,(JSON_derulo js);
+    JSON_derulo& operator()(JSON_derulo js);
     JSON_derulo operator+(JSON_derulo js);
     JSON_derulo operator-(JSON_derulo js);
     JSON_derulo operator/(JSON_derulo js);
@@ -139,11 +144,19 @@ public:
     JSON_derulo operator&&(JSON_derulo js);
     JSON_derulo operator||(JSON_derulo js);
     JSON_derulo operator==(JSON_derulo js);
+    JSON_derulo operator+=(JSON_derulo js);
+    void operator>>(JSON_derulo& js);
+    void operator<<(JSON_derulo& js);
 };
 
-void erase_data(JSON_derulo rulo);
+
+JSON_derulo size_of(JSON_derulo rulo);
+JSON_derulo hasKey(JSON_derulo js, std::string key);
+void erase_data(JSON_derulo& rulo);
 void printJSON(JSON_derulo json, int indent = 0);
 bool areJSONEqual(JSON_derulo obj1,JSON_derulo obj2);
 std::ostream& operator<<(std::ostream& os,const JSON_derulo& js);
-
+JSON_derulo is_empty_json(JSON_derulo rulo);
+bool findDuplicates(JSON_derulo js,std::string key);
+void foo();
 #endif

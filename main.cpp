@@ -1,30 +1,49 @@
 #include "JSONlang.h"
-
+JSON(hello)
 PROGRAM_BEGIN
 
 JSON(name) = STRING("Manolis")
 
 JSON(oop) = OBJECT{ 
     KEY(title) : STRING("title"),
-    KEY(title) : STRING("title")
+    KEY(title2) : STRING("title5")
+}+OBJECT{ 
+    KEY(title3) : STRING("title"),
+    KEY(title2) : STRING("title")
 }
+
 JSON(firstarray) = ARRAY
 JSON(secondarray) = ARRAY[ STRING("Kalispera"), STRING("KALH")]
 
-JSON(students) = ARRAY [
-    OBJECT{
-            KEY(name) : STRING("Nikos Nikolaou"),
-            KEY(id) : STRING("HEYYY"),
-            KEY(grades) : ARRAY[ OBJECT { KEY(hy100) : NUMBER(7.5) }, OBJECT { KEY(hy150) : NUMBER(8) } ] 
-        },
-        OBJECT{
-        KEY(name) : STRING("Petros Nikolaou"),
-        KEY(id) : STRING("HEYYY"),
-        KEY(grades) : ARRAY[ OBJECT { KEY(hy100) : NUMBER(7.5) }, OBJECT { KEY(hy150) : NUMBER(8) } ] 
-    }
-    ]
-SET secondarray[0] ASSIGN STRING("KAVLISPERMA :3")
-PRINT students[1]["grades"][0]
-PRINT STRING("Book has key author? ")
+/** 
+JSON(UOC) = OBJECT {
+    KEY(MATHIMATIKO) : OBJECT {
+        KEY(MEM341) : STRING("Oikonomia or sumn"),
+        KEY(MEM555) : STRING("Kati me arithmous"),
+        KEY(MEM666) : STRING("Arithmoi 2")
+    },
+    KEY(CSD) : OBJECT {
+        KEY(HY100) : STRING("Eisagwgh"),
+        KEY(HY352) : STRING("software engineering"),
+        KEY(HY469) : STRING("HCI")
+    },
+    KEY(Iatriki) : OBJECT {
+        KEY(MED1000) : STRING("Eisagwgh sto depon"),
+        KEY(MED252) : STRING("Antikeimenostrafhs farmakologia"),
+        KEY(MED352) : STRING("Mixanikos Swmatos"),
+        KEY(MED240) : STRING("Domes tis kardias"),
+        KEY(MED359) : STRING("Web tis anw koilias"),
+        KEY(MED340) : STRING("")
+    },
+    KEY(HELL) : OBJECT {}
+    
+}
+SET UOC["Iatriki"]["MED340"] ASSIGN STRING("GLWSSES KAI VOCAL CORDS")
+*/
+SET secondarray APPEND STRING("HEYYY"),STRING("MISO LEPTO") 
+PRINT secondarray 
+
+
+
 
 PROGRAM_END
