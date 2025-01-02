@@ -141,18 +141,15 @@ JSON_derulo& JSON_derulo::operator[](JSON_derulo js) {
 
 JSON_derulo& JSON_derulo::operator,(JSON_derulo js) {
     if(probablyAppend) {
-        if(temp2==NULL) {
-            temp2 = &js;
-        }
-    } else {
-        temp2 = NULL;
+        *this += js;
     }
     if(temp == NULL) {
         temp = &js;
     }
     temp->arrayValue.push_back(js);
     return *this;
-}        
+}             
+
 JSON_derulo JSON_derulo::operator+(JSON_derulo js) {
     JSON_derulo n;
     if(this->getType() == integer && js.getType() == integer){
@@ -272,7 +269,7 @@ JSON_derulo JSON_derulo::operator*(JSON_derulo js) {
         n.setDoubleValue(this->getIntegerValue() * js.getDoubleValue());
         n.setType(doubl);
     }
-    return *this;
+    return n;
 }
 JSON_derulo JSON_derulo::operator%(JSON_derulo js) {
     JSON_derulo n;
@@ -498,21 +495,10 @@ JSON_derulo& JSON_derulo::operator()(JSON_derulo js) {
     return *this;
 }
 
-JSON_derulo JSON_derulo::operator+=(JSON_derulo js) {
-        
-        std::vector<JSON_derulo> tmp;
-        tmp = this->arrayValue;
-        if(temp2 != NULL) {
-            this->setArrayValue(temp2->getArrayValue());
-        }
-        for (JSON_derulo value : tmp) {
-            this->arrayValue.push_back(value);
-        }
-        this->arrayValue.emplace(this->arrayValue.begin(),js);
-        if(temp2 != NULL) {
-            temp2 = NULL;
-        }
-        return *this;
+JSON_derulo& JSON_derulo::operator+=(JSON_derulo js) {
+
+    this->arrayValue.push_back(js);
+    return *this;
 }
 
 void erase_data(JSON_derulo& right){

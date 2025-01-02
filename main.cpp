@@ -15,7 +15,6 @@ JSON(oop) = OBJECT{
 JSON(firstarray) = ARRAY
 JSON(secondarray) = ARRAY[ STRING("Kalispera"), STRING("KALH")]
 
-/** 
 JSON(UOC) = OBJECT {
     KEY(MATHIMATIKO) : OBJECT {
         KEY(MEM341) : STRING("Oikonomia or sumn"),
@@ -39,9 +38,10 @@ JSON(UOC) = OBJECT {
     
 }
 SET UOC["Iatriki"]["MED340"] ASSIGN STRING("GLWSSES KAI VOCAL CORDS")
-*/
+
 SET secondarray APPEND STRING("HEYYY"),STRING("MISO LEPTO") 
 PRINT secondarray 
+PRINT UOC
 
 
 

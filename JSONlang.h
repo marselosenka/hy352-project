@@ -32,9 +32,9 @@ using namespace std;
 #define APPEND              += 
 
 #define HAS_KEY(json,str)   hasKey(json,str)  
-#define SIZE_OF(json)       size_of(json)
+#define SIZE_OF(json)       ;size_of(json)
 #define PRINT               ;cout<<
-#define IS_EMPTY(json)      is_empty_json(json)
+#define IS_EMPTY(json)      ;is_empty_json(json)
 
 // Enum to define data types
 enum Type{
@@ -144,7 +144,7 @@ public:
     JSON_derulo operator&&(JSON_derulo js);
     JSON_derulo operator||(JSON_derulo js);
     JSON_derulo operator==(JSON_derulo js);
-    JSON_derulo operator+=(JSON_derulo js);
+    JSON_derulo& operator+=(JSON_derulo js);
     void operator>>(JSON_derulo& js);
     void operator<<(JSON_derulo& js);
 };
@@ -158,5 +158,4 @@ bool areJSONEqual(JSON_derulo obj1,JSON_derulo obj2);
 std::ostream& operator<<(std::ostream& os,const JSON_derulo& js);
 JSON_derulo is_empty_json(JSON_derulo rulo);
 bool findDuplicates(JSON_derulo js,std::string key);
-void foo();
 #endif
