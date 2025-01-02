@@ -144,6 +144,6 @@ public:
 void erase_data(JSON_derulo rulo);
 void printJSON(JSON_derulo json, int indent = 0);
 bool areJSONEqual(JSON_derulo obj1,JSON_derulo obj2);
-std::ostream& operator<<(std::ostream& os, JSON_derulo& js);
+std::ostream& operator<<(std::ostream& os,const JSON_derulo& js);
 
 #endif

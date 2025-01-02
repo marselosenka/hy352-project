@@ -593,7 +593,7 @@ bool areJSONEqual(JSON_derulo obj1,JSON_derulo obj2) {
 }
 
 
-std::ostream& operator<<(std::ostream& os, JSON_derulo& js) {
+std::ostream& operator<<(std::ostream& os,const JSON_derulo& js) {
     printJSON(js, 0);
     return os;
 }

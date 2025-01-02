@@ -24,5 +24,7 @@ JSON(students) = ARRAY [
     }
     ]
 SET secondarray[0] ASSIGN STRING("KAVLISPERMA :3")
-PRINT students[1]["slay"][0]
+PRINT students[1]["grades"][0]
+PRINT STRING("Book has key author? ")
+
 PROGRAM_END
