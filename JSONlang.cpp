@@ -7,7 +7,7 @@ JSON_derulo *temp2 = NULL;
 JSON_derulo *k = NULL;
 std::string tmp_str = "";
 int glob_index = -1;
-
+bool set_flag = false;
 bool toERASE = false;
 bool probablyAppend = false;
 // CONSTRUCTORS 
@@ -121,6 +121,9 @@ JSON_derulo JSON_derulo::operator=(JSON_derulo right) {
     } else if(right.getType() == arr) {
         this->setArrayValue(right.getArrayValue());
         this->setType(right.getType());
+    }  else if(right.getType() == boolean) {
+        this->setBoolValue(right.getBoolValue());
+        this->setType(right.getType());
     }
 
 
@@ -151,309 +154,417 @@ JSON_derulo& JSON_derulo::operator,(JSON_derulo js) {
 }             
 
 JSON_derulo JSON_derulo::operator+(JSON_derulo js) {
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        n.setIntegerValue(this->getIntegerValue() + js.getIntegerValue());
-        n.setType(integer);
-    }else if(this->getType() == doubl && js.getType() == doubl){
-        n.setDoubleValue(this->getDoubleValue() + js.getDoubleValue());
-        n.setType(doubl);
-    }else if(this->getType() == doubl && js.getType() == integer){
-        n.setDoubleValue(this->getDoubleValue() + js.getIntegerValue());
-        n.setType(doubl);
-    }else if(this->getType() == integer && js.getType() == doubl){
-        n.setDoubleValue(this->getIntegerValue() + js.getDoubleValue());
-        n.setType(doubl);
-    }
-    else if(this->getType() == strg && js.getType() == strg){
-        n.setStringValue(this->getStringValue() + js.getStringValue());
-        n.setType(strg);
-    }else if(this->getType() == arr && js.getType() == arr){
-    
-        std::vector<JSON_derulo> tmp;
-        tmp = this->arrayValue;
-        for (JSON_derulo value : js.getArrayValue()) {
-            tmp.push_back(value);
-        }
-        n.setType(arr);
-        n.setArrayValue(tmp);
-    }else if(this->getType() == obj_ && js.getType() == obj_){//case for duplicate keys
-        std::list<JSON_derulo> tmp;
-        tmp = this->getObjectValue();
-        for (JSON_derulo value : js.getObjectValue()) {
-            if(findDuplicates(*this,value.getKey())) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            n.setIntegerValue(this->getIntegerValue() + js.getIntegerValue());
+            n.setType(integer);
+            return n;
+        }else if(this->getType() == doubl && js.getType() == doubl){
+            n.setDoubleValue(this->getDoubleValue() + js.getDoubleValue());
+            n.setType(doubl);
+            return n;
+        }else if(this->getType() == doubl && js.getType() == integer){
+            n.setDoubleValue(this->getDoubleValue() + js.getIntegerValue());
+            n.setType(doubl);
+        }else if(this->getType() == integer && js.getType() == doubl){
+            n.setDoubleValue(this->getIntegerValue() + js.getDoubleValue());
+            n.setType(doubl);
+            return n;
+        }else if(this->getType() == strg && js.getType() == strg){
+            n.setStringValue(this->getStringValue() + js.getStringValue());
+            n.setType(strg);
+            return n;
+        }else if(this->getType() == arr && js.getType() == arr){
+        
+            std::vector<JSON_derulo> tmp;
+            tmp = this->arrayValue;
+            for (JSON_derulo value : js.getArrayValue()) {
                 tmp.push_back(value);
             }
-        }
-        n.setType(obj_);
-        n.setObjectValue(tmp);
-    } else {        // APPEND
-        if(this->getType() == arr) { 
-            
-            cout<<"operator+"<<endl;
-            if(temp2 != NULL) {
-                cout<<"HEYY"<<endl;
+            n.setType(arr);
+            n.setArrayValue(tmp);
+            return n;
+        }else if(this->getType() == obj_ && js.getType() == obj_){
+            std::list<JSON_derulo> tmp;
+            tmp = this->getObjectValue();
+            for (JSON_derulo value : js.getObjectValue()) {
+                if(findDuplicates(*this,value.getKey())) {
+                    tmp.push_back(value);
+                }
             }
-            if(temp2 != NULL) {
-                temp2 = NULL;
-            }
-            
-           cout<<"UHH"<<endl;
-        }
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator-(JSON_derulo js) {
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        n.setIntegerValue(this->getIntegerValue() - js.getIntegerValue());
-        n.setType(integer);
-    }else if(this->getType() == doubl && js.getType() == doubl){
-        n.setDoubleValue(this->getDoubleValue() - js.getDoubleValue());
-        n.setType(doubl);
-    }else if(this->getType() == doubl && js.getType() == integer){
-        n.setDoubleValue(this->getDoubleValue() - js.getIntegerValue());
-        n.setType(doubl);
-    }else if(this->getType() == integer && js.getType() == doubl){
-        n.setDoubleValue(this->getIntegerValue() - js.getDoubleValue());
-        n.setType(doubl);
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator/(JSON_derulo js) {
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        if(js.getIntegerValue() == 0){
-            cout<<"Division by zero"<<endl;
-            return *this;
-        }
-        
-       n.setDoubleValue(this->getIntegerValue() / js.getIntegerValue());
-       n.setType(doubl);
-    }else if(this->getType() == doubl && js.getType() == doubl){
-        if(js.getDoubleValue() == 0){
-            cout<<"Division by zero"<<endl;
-            return *this;
-        }
-        n.setDoubleValue(this->getDoubleValue() / js.getDoubleValue());
-        n.setType(doubl);
-    }else if(this->getType() == doubl && js.getType() == integer){
-        if(js.getIntegerValue() == 0){
-            cout<<"Division by zero"<<endl;
-            return *this;
-        }
-        n.setDoubleValue(this->getDoubleValue() / js.getIntegerValue());
-        n.setType(doubl);
-    }else if(this->getType() == integer && js.getType() == doubl){
-        if(js.getDoubleValue() == 0){
-            cout<<"Division by zero"<<endl;
-            return *this;
-        }
-        n.setDoubleValue(this->getIntegerValue() / js.getDoubleValue());
-        n.setType(doubl);
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator*(JSON_derulo js) {
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        n.setIntegerValue(this->getIntegerValue() * js.getIntegerValue());
-        n.setType(integer);
-    }else if(this->getType() == doubl && js.getType() == doubl){
-        n.setDoubleValue(this->getDoubleValue() * js.getDoubleValue());
-        n.setType(doubl);
-    }else if(this->getType() == doubl && js.getType() == integer){
-        n.setDoubleValue(this->getDoubleValue() * js.getIntegerValue());
-        n.setType(doubl);
-    }else if(this->getType() == integer && js.getType() == doubl){
-        n.setDoubleValue(this->getIntegerValue() * js.getDoubleValue());
-        n.setType(doubl);
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator%(JSON_derulo js) {
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        n.setIntegerValue(this->getIntegerValue() % js.getIntegerValue());
-        n.setType(integer);
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator>(JSON_derulo js) {
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        if(this->getIntegerValue() > js.getIntegerValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == doubl && js.getType() == doubl){
-        if(this->getDoubleValue() > js.getDoubleValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == doubl && js.getType() == integer){
-        if(this->getDoubleValue() > js.getIntegerValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == integer && js.getType() == doubl){
-        if(this->getIntegerValue() > js.getDoubleValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator>=(JSON_derulo js) {
+            n.setType(obj_);
+            n.setObjectValue(tmp);
+            return n;
 
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        if(this->getIntegerValue() >= js.getIntegerValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
         }
-    }else if(this->getType() == doubl && js.getType() == doubl){
-        if(this->getDoubleValue() >= js.getDoubleValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == doubl && js.getType() == integer){
-        if(this->getDoubleValue() >= js.getIntegerValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == integer && js.getType() == doubl){
-        if(this->getIntegerValue() >= js.getDoubleValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator<(JSON_derulo js) {
-
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        if(this->getIntegerValue() < js.getIntegerValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == doubl && js.getType() == doubl){
-        if(this->getDoubleValue() < js.getDoubleValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == doubl && js.getType() == integer){
-        if(this->getDoubleValue() < js.getIntegerValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == integer && js.getType() == doubl){
-        if(this->getIntegerValue() < js.getDoubleValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator<=(JSON_derulo js) {
-
-    JSON_derulo n;
-    if(this->getType() == integer && js.getType() == integer){
-        if(this->getIntegerValue() <= js.getIntegerValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == doubl && js.getType() == doubl){
-        if(this->getDoubleValue() <= js.getDoubleValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == doubl && js.getType() == integer){
-        if(this->getDoubleValue() <= js.getIntegerValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }else if(this->getType() == integer && js.getType() == doubl){
-        if(this->getIntegerValue() <= js.getDoubleValue()){
-            n.setBoolValue(true);
-            n.setType(boolean);
-        }else{
-            n.setBoolValue(false);
-            n.setType(boolean);
-        }
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator&&(JSON_derulo js) {
-    JSON_derulo n;
-    if(this->getType() == boolean && js.getType() == boolean){
-       n.setBoolValue(this->getBoolValue() && js.getBoolValue());
-       n.setType(boolean);
-    }
-    return n;
-}
-JSON_derulo JSON_derulo::operator||(JSON_derulo js) {
-    JSON_derulo n;
-    if(this->getType() == boolean && js.getType() == boolean){
-        n.setBoolValue(this->getBoolValue() || js.getBoolValue());
-        n.setType(boolean);
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
     }
     
-    return n;
+}
+JSON_derulo JSON_derulo::operator-(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            n.setIntegerValue(this->getIntegerValue() - js.getIntegerValue());
+            n.setType(integer);
+        }else if(this->getType() == doubl && js.getType() == doubl){
+            n.setDoubleValue(this->getDoubleValue() - js.getDoubleValue());
+            n.setType(doubl);
+        }else if(this->getType() == doubl && js.getType() == integer){
+            n.setDoubleValue(this->getDoubleValue() - js.getIntegerValue());
+            n.setType(doubl);
+        }else if(this->getType() == integer && js.getType() == doubl){
+            n.setDoubleValue(this->getIntegerValue() - js.getDoubleValue());
+            n.setType(doubl);
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator/(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            if(js.getIntegerValue() == 0){
+                cout<<"Division by zero"<<endl;
+                return *this;
+            }
+            n.setDoubleValue(this->getIntegerValue() / js.getIntegerValue());
+            n.setType(doubl);
+            return n;
+        }else if(this->getType() == doubl && js.getType() == doubl){
+            if(js.getDoubleValue() == 0){
+                cout<<"Division by zero"<<endl;
+                return *this;
+            }
+            n.setDoubleValue(this->getDoubleValue() / js.getDoubleValue());
+            n.setType(doubl);
+            return n;
+        }else if(this->getType() == doubl && js.getType() == integer){
+            if(js.getIntegerValue() == 0){
+                cout<<"Division by zero"<<endl;
+                return *this;
+            }
+            n.setDoubleValue(this->getDoubleValue() / js.getIntegerValue());
+            n.setType(doubl);
+            return n;
+        }else if(this->getType() == integer && js.getType() == doubl){
+            if(js.getDoubleValue() == 0){
+                cout<<"Division by zero"<<endl;
+                return *this;
+            }
+            n.setDoubleValue(this->getIntegerValue() / js.getDoubleValue());
+            n.setType(doubl);
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator*(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            n.setIntegerValue(this->getIntegerValue() * js.getIntegerValue());
+            n.setType(integer);
+            return n;
+        }else if(this->getType() == doubl && js.getType() == doubl){
+            n.setDoubleValue(this->getDoubleValue() * js.getDoubleValue());
+            n.setType(doubl);
+            return n;
+        }else if(this->getType() == doubl && js.getType() == integer){
+            n.setDoubleValue(this->getDoubleValue() * js.getIntegerValue());
+            n.setType(doubl);
+            return n;
+        }else if(this->getType() == integer && js.getType() == doubl){
+            n.setDoubleValue(this->getIntegerValue() * js.getDoubleValue());
+            n.setType(doubl);
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator%(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            n.setIntegerValue(this->getIntegerValue() % js.getIntegerValue());
+            n.setType(integer);
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator>(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            if(this->getIntegerValue() > js.getIntegerValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == doubl && js.getType() == doubl){
+            if(this->getDoubleValue() > js.getDoubleValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == doubl && js.getType() == integer){
+            if(this->getDoubleValue() > js.getIntegerValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == integer && js.getType() == doubl){
+            if(this->getIntegerValue() > js.getDoubleValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator>=(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            if(this->getIntegerValue() >= js.getIntegerValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == doubl && js.getType() == doubl){
+            if(this->getDoubleValue() >= js.getDoubleValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == doubl && js.getType() == integer){
+            if(this->getDoubleValue() >= js.getIntegerValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == integer && js.getType() == doubl){
+            if(this->getIntegerValue() >= js.getDoubleValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator<(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            if(this->getIntegerValue() < js.getIntegerValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == doubl && js.getType() == doubl){
+            if(this->getDoubleValue() < js.getDoubleValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == doubl && js.getType() == integer){
+            if(this->getDoubleValue() < js.getIntegerValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == integer && js.getType() == doubl){
+            if(this->getIntegerValue() < js.getDoubleValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator<=(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == integer && js.getType() == integer){
+            if(this->getIntegerValue() <= js.getIntegerValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == doubl && js.getType() == doubl){
+            if(this->getDoubleValue() <= js.getDoubleValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == doubl && js.getType() == integer){
+            if(this->getDoubleValue() <= js.getIntegerValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }else if(this->getType() == integer && js.getType() == doubl){
+            if(this->getIntegerValue() <= js.getDoubleValue()){
+                n.setBoolValue(true);
+                n.setType(boolean);
+            }else{
+                n.setBoolValue(false);
+                n.setType(boolean);
+            }
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator&&(JSON_derulo js) {
+    try{
+        JSON_derulo n;
+        if(this->getType() == boolean && js.getType() == boolean){
+            n.setBoolValue(this->getBoolValue() && js.getBoolValue());
+            n.setType(boolean);
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
+JSON_derulo JSON_derulo::operator||(JSON_derulo js) {
+    try{
+    JSON_derulo n;
+        if(this->getType() == boolean && js.getType() == boolean){
+            n.setBoolValue(this->getBoolValue() || js.getBoolValue());
+            n.setType(boolean);
+            return n;
+        }
+        throw "Error";
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+    
 }
 JSON_derulo JSON_derulo::operator==(JSON_derulo js) {
-    JSON_derulo n;
-    n.setBoolValue(areJSONEqual(*this,js));
-    n.setType(boolean);
-    return n;
+    try{
+        if(this->getType() != js.getType()){
+            throw "Error";
+        }
+        JSON_derulo n;
+        n.setBoolValue(areJSONEqual(*this,js));
+        n.setType(boolean);
+        cout<<n.getBoolValue();
+        return n;
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
 }
-
+JSON_derulo JSON_derulo::operator!=(JSON_derulo js) {
+    try{
+        if(this->getType() != js.getType()){
+            throw "Error";
+        }
+        JSON_derulo n;
+        n.setBoolValue(!areJSONEqual(*this,js));
+        n.setType(boolean);
+        cout<<n.getBoolValue();
+        return n;
+    } catch(...) {
+        cout<<"Type mismatch"<<endl;
+        exit(0);
+        return *this;
+    }
+}
 JSON_derulo& JSON_derulo::operator[](int i) {
     if(toERASE == true) {
         k = this;
@@ -473,6 +584,17 @@ JSON_derulo& JSON_derulo::operator[](std::string s) {
         for(auto& json : objectValue) {
             if(json.getKey() == s) {
                 return json;
+            }
+        }
+        if(set_flag){
+            JSON_derulo rulo;
+            rulo.setKey(s);
+            objectValue.emplace_back(rulo);
+            set_flag = false;
+            for(auto& json : objectValue) {
+            if(json.getKey() == s) {
+                return json;
+            }
             }
         }
         throw s;
@@ -496,8 +618,14 @@ JSON_derulo& JSON_derulo::operator()(JSON_derulo js) {
 }
 
 JSON_derulo& JSON_derulo::operator+=(JSON_derulo js) {
+    if(js.getType()== obj_){
+        for(auto& json : js.getObjectValue()) {
+            this->objectValue.emplace_back(json);
+        }
+    }else{
+        this->arrayValue.push_back(js);
 
-    this->arrayValue.push_back(js);
+    }
     return *this;
 }
 
@@ -528,11 +656,14 @@ void printJSON(JSON_derulo json, int indent) {
             break;
 
         case integer:
+            
             std::cout << json.getIntegerValue();
             if(indent == 0)cout<<endl;
             break;
 
         case strg:
+            std::cout <<json.getKey()<<endl;
+            
             std::cout<<"\""<< json.getStringValue()<<"\"";
             if(indent == 0)cout<<endl;
             break;
@@ -693,6 +824,7 @@ void JSON_derulo::operator>>(JSON_derulo& js) {
     }
 }
 
+
 JSON_derulo is_empty_json(JSON_derulo rulo){
     JSON_derulo ret_value;
     ret_value.setType(boolean);
@@ -715,4 +847,22 @@ bool findDuplicates(JSON_derulo js,std::string key) {
 }
 void foo() {
     return;
+}
+JSON_derulo type_of(JSON_derulo rulo){
+    JSON_derulo ret_value;
+    ret_value.setType(strg);
+    if(rulo.getType() == arr){
+        ret_value.setStringValue("array");
+    }else if(rulo.getType() == obj_){
+        ret_value.setStringValue("object");
+    }else if(rulo.getType() == integer && rulo.getType() == doubl){
+        ret_value.setStringValue("number");
+    }else if(rulo.getType() == boolean){
+        ret_value.setStringValue("boolean");
+    }else if(rulo.getType() == strg){
+        ret_value.setStringValue("string");
+    }else{
+        ret_value.setStringValue("null");
+    }
+    return ret_value;
 }

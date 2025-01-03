@@ -26,7 +26,7 @@ using namespace std;
 #define FALSE               JSON_derulo(false,"false")
 
 // MANIPULATION OF OBJECTS/ARRAYS
-#define SET                 ;probablyAppend=true;
+#define SET                 ;set_flag=true;probablyAppend=true;
 #define ASSIGN              =
 #define ERASE               ;toERASE=true; dummy>>
 #define APPEND              += 
@@ -35,6 +35,7 @@ using namespace std;
 #define SIZE_OF(json)       ;size_of(json)
 #define PRINT               ;cout<<
 #define IS_EMPTY(json)      ;is_empty_json(json)
+#define TYPE_OF(json)       type_of(json)
 
 // Enum to define data types
 enum Type{
@@ -48,7 +49,7 @@ enum Type{
 };
 extern bool toERASE;
 extern bool probablyAppend;
-
+extern bool set_flag;
 /**
  * Class that will be holding the JSON data.
  * 
@@ -144,6 +145,7 @@ public:
     JSON_derulo operator&&(JSON_derulo js);
     JSON_derulo operator||(JSON_derulo js);
     JSON_derulo operator==(JSON_derulo js);
+    JSON_derulo operator!=(JSON_derulo js);
     JSON_derulo& operator+=(JSON_derulo js);
     void operator>>(JSON_derulo& js);
     void operator<<(JSON_derulo& js);
@@ -158,4 +160,5 @@ bool areJSONEqual(JSON_derulo obj1,JSON_derulo obj2);
 std::ostream& operator<<(std::ostream& os,const JSON_derulo& js);
 JSON_derulo is_empty_json(JSON_derulo rulo);
 bool findDuplicates(JSON_derulo js,std::string key);
+JSON_derulo type_of(JSON_derulo rulo);
 #endif
